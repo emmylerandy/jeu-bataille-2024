@@ -5,6 +5,7 @@ import { GamesService } from '../../core/api/api/games.service';
 import { Game } from '../../core/api/model/game';
 import { Player, PlayersService } from '../../core/api';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -16,25 +17,16 @@ import { forkJoin } from 'rxjs';
 })
 export class HomePageComponent implements OnInit {
   private gamesService = inject(GamesService);
-  private playersService =inject(PlayersService);
-
-  allGames : Game[] =[];
-  allPlayers : Player[]= [];
-  gamesWithPlayers: any[] = [];
+  private playersService = inject(PlayersService);
+  private router = inject(Router);
+  
+  //[TODO]
+  //ajouter un type gamesWithPlayer
+  //ajouter Gagnant pour pouvoir l'afficher différemment
+  allGamesWithPlayers: any[] = [];
 
   ngOnInit(): void {
-    /*this.gamesService.gamesGet().subscribe(res=>{
-      this.allGames = res;
-      console.log(this.allGames)
-    });
-    this.playersService.playersGet().subscribe(res=>{
-      this.allPlayers = res;
-      console.log(this.allPlayers)
-    });*/
     this.loadGamesAndPlayers();
-
-    
-    
   }
   
   loadGamesAndPlayers() : void {
@@ -45,19 +37,21 @@ export class HomePageComponent implements OnInit {
       {
         next: ([games, players]) => {
           const playersMap = new Map(players.map(player => [player.id, player]));
-          this.gamesWithPlayers = games.map(game => ({
+          this.allGamesWithPlayers = games.map(game => ({
             ...game, 
             player1: game.scores ? playersMap.get(game.scores[0].playerId) : null,
             player2: game.scores ? playersMap.get(game.scores[1].playerId) : null
           }));
-          console.log(this.gamesWithPlayers);
         },
         error: (e) =>{
           console.error('Erreur lors de la récupération des données :', e);
         },
         
       }
-    )
-      
+    )   
+  }
+
+  startGame() : void {
+    this.router.navigateByUrl('jeu-bataille/game');
   }
 }

@@ -1,0 +1,69 @@
+
+@if(showSelection){
+    <h1> Nouvelle partie </h1>
+}@else if(currentPlayer==1){
+    <h1> Au tour de {{player1?.name}} </h1>
+}@else if(currentPlayer==2){
+    <h1> Au tour de {{player2?.name}} </h1>
+}@else if(currentPlayer==0){
+    <h1> Partie terminée ! Le gagnant est {{winner}}</h1>
+}
+
+
+@if(showSelection){
+    <div>
+        Sélectionnez les joueurs : 
+    </div>
+    <form [formGroup]="form">
+    <mat-selection-list #players [formControl]="playersControl">
+        @for (player of allPlayers; track player) {
+        <mat-list-option #playerId [value]="player" [disabled]="players.selectedOptions.selected.length==2 && !playerId.selected">
+            {{player.name}}
+        </mat-list-option>
+        }
+    </mat-selection-list>
+    </form>
+    <mat-form-field >
+        <mat-label>Nom du joueur</mat-label>
+        <input matInput type="text"  [(ngModel)]="name" [disabled]="creationLoading">
+        @if (name) {
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="name=''" [disabled]="creationLoading">
+            <mat-icon>close</mat-icon>
+            </button>
+        }
+    </mat-form-field>
+    <button mat-raised-button (click)="newPlayer()" [disabled]="creationLoading">Créer un nouveau joueur
+        @if(creationLoading){
+            <mat-icon>
+                <mat-spinner color="accent" diameter="15"></mat-spinner>
+            </mat-icon>
+        }
+    </button >
+
+    @if(players.selectedOptions.selected.length==2){
+        <div>
+            Démarrer la partie entre  {{players.selectedOptions.selected[0] ? players.selectedOptions.selected[0].value.name : ''}} et 
+                                    {{players.selectedOptions.selected[1] ? players.selectedOptions.selected[1].value.name : ''}}
+        </div>
+        <button mat-raised-button (click)="newGame()">Jouer</button >
+    }
+}@else {
+    <div  class="centerButton">
+        <button mat-raised-button (click)="goToHomePage()" [hidden]="currentPlayer!=0">Retour menu principal</button >
+    </div>
+    <div class="board" >
+        <div class="p1">
+            <h3>{{player1?.name}}</h3>
+            <div>Score : {{cardGame?.scorePlayer1 ?? 0}}</div>
+            <div class="card">{{cardGame?.currentCardP1}}</div>
+            <button mat-raised-button (click)="flipCard()" [disabled]="currentPlayer!=1">Retourner la carte</button >
+        </div>
+        
+        <div class="p2">
+            <h3>{{player2?.name}}</h3>
+            <div>Score : {{cardGame?.scorePlayer2 ?? 0}}</div>
+            <div class="card">{{cardGame?.currentCardP2}}</div>
+            <button mat-raised-button (click)="flipCard()" [disabled]="currentPlayer!=2">Retourner la carte</button >
+        </div>
+    </div>
+}

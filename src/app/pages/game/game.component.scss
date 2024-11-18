@@ -1,0 +1,52 @@
+h1{
+    display: flex;
+    justify-content: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.board  {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 50px;
+    grid-row-gap: 0px;
+}
+
+.p1{
+    grid-area: 1 / 1 / 2 / 2;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.p2{
+    grid-area: 1 / 2 / 2 / 3;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: xx-large;
+    align-items: center;
+    margin-bottom: 30px;
+    margin-top: 40px;
+    width: 200px;
+    height: 300px;
+    border-radius: 30px;
+    background: #e0e0e0;
+    box-shadow: 15px 15px 30px #bebebe,
+                -15px -15px 30px #ffffff;
+}
+
+.centerButton{
+    display: flex;
+    justify-content: center;
+}
