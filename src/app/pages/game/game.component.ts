@@ -31,8 +31,10 @@ export class GameComponent implements OnInit{
   winner: string | undefined;
   player1: Player | undefined;
   player2: Player | undefined;
-  creationLoading : boolean = false;
+  creationLoading : boolean = true;
+  playersLoading : boolean = true;
   showSelection : boolean = true;
+  nameAlreadyExist: boolean = false;
   cardGame : CardGame | undefined;
   currentPlayer : number = 1 ;
     
@@ -54,8 +56,10 @@ export class GameComponent implements OnInit{
     this.playersService.playersPost(playload,'response').subscribe({
       next : (result) => {
         if(result.status == 200){
-          //TODO
-          //Ce nom de joueur existe déja
+          console.warn("Ce nom de joueur existe déjà");
+          //TODO -> renvoyer un message a l'utilisateur
+        }else{
+          this.getAllPlayers();
         }
       },
       error : (e) => {
@@ -69,9 +73,17 @@ export class GameComponent implements OnInit{
   }
 
   getAllPlayers() : void {
+    this.playersLoading = true ;
     this.playersService.playersGet().subscribe({
       next : (players : Player[]) => {
         this.allPlayers=players;
+      },
+      error : (e) => {
+        console.error("La récupération des joueurs a échoué ",e);
+      },
+      complete : () => {
+        this.playersLoading = false;
+        this.creationLoading = false;
       }
     })
   }

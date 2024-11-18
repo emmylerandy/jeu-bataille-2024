@@ -1,19 +1,22 @@
-<h1>Bienvenue dans le jeu de la bataille</h1>
+<div class="container">
+    <h1>Bienvenue dans le jeu de la bataille</h1>
 
-<div>
-    Parties précédentes:
-    <mat-list>
-        @for (game of allGamesWithPlayers; track game.id){
-            @if(game.scores){
-                <mat-list-item>
-                    {{game.player1.name}} : {{game.scores[0].score}} - {{game.scores[1].score}} : {{game.player2.name}}
-                </mat-list-item>
+    <button mat-raised-button (click)="startGame()">NOUVELLE PARTIE</button >
+
+    <div class="listContainer">
+        Parties précédentes:
+        <mat-list class="list">
+            @for (game of allGamesWithPlayers; track game.id){
+                @if(game.scores){
+                    <mat-list-item>
+                        {{game.player1?.name}} : {{game.scores[0].score}} - {{game.scores[1].score}} : {{game.player2?.name}}
+                    </mat-list-item>
+                    <mat-divider></mat-divider>
+                }
             }
-        }
+            
         
-       
-    </mat-list>
+        </mat-list>
+    </div>
 </div>
 
-
-<button mat-raised-button (click)="startGame()">Nouvelle partie</button >

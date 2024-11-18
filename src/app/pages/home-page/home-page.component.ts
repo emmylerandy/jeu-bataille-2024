@@ -1,11 +1,17 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list'
 import { GamesService } from '../../core/api/api/games.service';
-import { Game } from '../../core/api/model/game';
-import { Player, PlayersService } from '../../core/api';
+import { Player, PlayersService, Score } from '../../core/api';
 import { forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
+
+type GameWithPlayers = {
+  id?: number,
+  scores?: Score[],
+  player1?: Player,
+  player2?: Player
+}
 
 @Component({
   selector: 'app-home-page',
@@ -19,11 +25,8 @@ export class HomePageComponent implements OnInit {
   private gamesService = inject(GamesService);
   private playersService = inject(PlayersService);
   private router = inject(Router);
-  
-  //[TODO]
-  //ajouter un type gamesWithPlayer
-  //ajouter Gagnant pour pouvoir l'afficher différemment
-  allGamesWithPlayers: any[] = [];
+
+  allGamesWithPlayers: GameWithPlayers[] = [];
 
   ngOnInit(): void {
     this.loadGamesAndPlayers();
@@ -39,8 +42,8 @@ export class HomePageComponent implements OnInit {
           const playersMap = new Map(players.map(player => [player.id, player]));
           this.allGamesWithPlayers = games.map(game => ({
             ...game, 
-            player1: game.scores ? playersMap.get(game.scores[0].playerId) : null,
-            player2: game.scores ? playersMap.get(game.scores[1].playerId) : null
+            player1: game.scores ? playersMap.get(game.scores[0].playerId) : undefined,
+            player2: game.scores ? playersMap.get(game.scores[1].playerId) : undefined
           }));
         },
         error: (e) =>{
