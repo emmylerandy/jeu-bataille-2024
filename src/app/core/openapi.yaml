@@ -1,0 +1,216 @@
+openapi: 3.1.0
+info:
+    title: Sogexia Hiring Test API - OpenAPI 3.0
+    description: Ce projet est une Api à utiliser lors du test de recrutement. Il propose une APi autour du concept de Player et de Game. Une authentification est nécessaire et décrite dans cette documentation. 
+    license:
+            name: Proprietary
+    version: "1"
+servers:
+    - url: https://localhost/api/v1/
+tags:
+    - name: players
+      description: Everything about Players
+    - name: games
+      description: Everything about Games
+paths:
+    /ping:
+        get:
+            description: Test your installation by calling this route 
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    ping:
+                                        type: string
+                                    ack:
+                                        type: string
+    /players:
+        get:
+            tags:
+                - players
+            summary: Get list of players
+            description: Get list of players
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Players'
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+        post:
+            tags:
+                - players
+            summary: Add new player
+            description: Add new player
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PlayerPayload'
+                            
+                required: true
+            responses:
+                '200':
+                    description: Already created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Player'
+                '201':
+                    description: Created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Player'
+                '400':
+                    description: Invalid input
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                '500':
+                    description: Unexpected error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+    /games:
+        get:
+            tags:
+                - games
+            summary: Get list of games
+            description: Get list of games
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Games'
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+        post:
+            tags:
+                - games
+            summary: Add new game score
+            description: Add new game score with related players and their score
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GamePayload'
+                required: true
+            responses:
+                '201':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Game'
+                    
+                '400':
+                    description: Invalid input
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                '500':
+                    description: Unexpected error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+components:
+    schemas:
+        Players:
+            type: array
+            description: List of players
+            items:
+                $ref: '#/components/schemas/Player'
+        Player:
+            type: object
+            description : One player
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+        PlayerPayload:
+            type: object
+            description: Player used in POST request body to create a new player
+            properties: 
+                name: 
+                    type: string
+        Games:
+            type: array
+            description: List of games
+            items:
+                $ref: '#/components/schemas/Game'            
+        Game:
+            type: object
+            description: One game
+            properties:
+                id:
+                    type: integer
+                scores:
+                    $ref: '#/components/schemas/Scores'
+        Scores:
+            type: array
+            description: List of scores
+            items:
+                $ref: '#/components/schemas/Score'
+        Score:
+            type: object
+            description: One score for one player
+            properties: 
+                playerId: 
+                    type: integer
+                score:
+                    type: integer
+        GamePayload:
+            type: array
+            description: Game used in POST request body to create a new score
+            $ref: '#/components/schemas/Scores'
+        Error:
+            type: object
+            description: Error message
+            properties:
+                message:
+                    type: string
+                
+    securitySchemes:
+        apiKeyAuth:
+            type: apiKey
+            in: header
+            name: Authorization
+            description: The content of the Authorization header must be "Apikey YOUR_API_KEY"
+            
+security:
+    - apiKeyAuth: []
