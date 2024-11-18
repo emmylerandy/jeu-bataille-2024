@@ -124,7 +124,6 @@ export class GameComponent implements OnInit{
     const scoreP2 : Score = {playerId : this.player2?.id, score : this.cardGame?.scorePlayer2};
     this.gamesService.gamesPost([scoreP1,scoreP2],'response').subscribe({
       next : (result) => {
-        console.log(result);
       }
     })
   }
