@@ -5,8 +5,10 @@
     <h1> Au tour de {{player1?.name}} </h1>
 }@else if(currentPlayer==2){
     <h1> Au tour de {{player2?.name}} </h1>
-}@else if(currentPlayer==0){
+}@else if(currentPlayer==0 && winner){
     <h1> Partie terminée ! Le gagnant est {{winner}}</h1>
+}@else if (currentPlayer==0 && winner==undefined) {
+    <h1> Partie terminée ! Egalité parfaite ! </h1>
 }
 
 

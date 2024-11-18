@@ -115,8 +115,10 @@ export class GameComponent implements OnInit{
   endGame(): void {
     if(this.cardGame && this.cardGame?.scorePlayer1 >this.cardGame?.scorePlayer2){
       this.winner=this.player1?.name;
-    }else{
+    }else if (this.cardGame && this.cardGame?.scorePlayer1 < this.cardGame?.scorePlayer2){
       this.winner=this.player2?.name;
+    } else{
+      this.winner = undefined;
     }
     const scoreP1 : Score = {playerId : this.player1?.id, score : this.cardGame?.scorePlayer1};
     const scoreP2 : Score = {playerId : this.player2?.id, score : this.cardGame?.scorePlayer2};
